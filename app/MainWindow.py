@@ -103,6 +103,7 @@ class MainWindow(QMainWindow):
         if len(fname) > 0:
             self.audioProcessor.load_file(fname)
             self.playerWidget.filename.setText(fname)
+            self.updateCanvas()
 
     def playFile(self):
         self.audioProcessor.play()

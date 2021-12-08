@@ -16,6 +16,7 @@ class AudioProcessing(object):
         self.sample_freq, self.original_audio_data = read(input_audio_path)
         self.original_audio_data = self.convert_to_mono_audio(self.original_audio_data)
         self.transformed_audio_data = self.original_audio_data
+        #self.add_delay(0)
 
     def convert_to_mono_audio(self, input_audio):
         output_audio = []
@@ -30,13 +31,13 @@ class AudioProcessing(object):
     def add_delay(self, delay):
         self.resetData()
         output_delay = delay * self.sample_freq
-        output_audio = np.zeros(len(self.transformed_audio_data) + int(output_delay), dtype='int16')
+        output_audio = np.zeros(len(self.transformed_audio_data) + int(output_delay), dtype='int64')
 
         for count, e in enumerate(self.transformed_audio_data):
             output_audio[count] += e
             output_audio[count + int(output_delay)] += e
 
-        self.transformed_audio_data = output_audio
+        self.transformed_audio_data = output_audio.astype(np.int16)
 
     def add_reverb(self, pre_delay, decay, interval):
         self.resetData()
