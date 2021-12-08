@@ -81,7 +81,7 @@ class AudioProcessing(object):
         index[index > (length - 1)] = length - 1
 
         # index = np.around(n_samples-Fs*)
-        temp_data = self.transformed_audio_data
+        temp_data = self.original_audio_data
 
         for i in range(length):
             output_audio[i] = np.float(temp_data[i]) + np.float(temp_data[int(index[i])])
