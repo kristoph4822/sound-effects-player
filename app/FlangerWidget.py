@@ -62,9 +62,9 @@ class FlangerWidget(QWidget):
         self.frequencyDial = QtWidgets.QDial(self.layoutWidget)
         self.frequencyDial.setMaximumSize(QtCore.QSize(50, 16777215))
         self.frequencyDial.setObjectName("frequencyDial")
-        self.frequencyDial.setMinimum(0)
-        self.frequencyDial.setMaximum(1000)
-        self.frequencyDial.setValue(100)
+        self.frequencyDial.setMinimum(1)
+        self.frequencyDial.setMaximum(100)
+        self.frequencyDial.setValue(50)
         self.horizontalLayout.addWidget(self.frequencyDial)
 
         self.frequencyValue = QtWidgets.QLabel(self.layoutWidget)
@@ -85,7 +85,7 @@ class FlangerWidget(QWidget):
         self.amplitudeDial.setMaximumSize(QtCore.QSize(50, 16777215))
         self.amplitudeDial.setObjectName("amplitudeDial")
         self.amplitudeDial.setMinimum(1)
-        self.amplitudeDial.setMaximum(1000)
+        self.amplitudeDial.setMaximum(100)
         self.amplitudeDial.setValue(10)
         self.horizontalLayout_2.addWidget(self.amplitudeDial)
 

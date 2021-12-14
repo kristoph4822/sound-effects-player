@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 from scipy.io.wavfile import read, write
 from scipy import signal
 import sounddevice as sd
@@ -16,7 +17,7 @@ class AudioProcessing(object):
         self.sample_freq, self.original_audio_data = read(input_audio_path)
         self.original_audio_data = self.convert_to_mono_audio(self.original_audio_data)
         self.transformed_audio_data = self.original_audio_data
-        #self.add_delay(0)
+        # self.add_delay(0)
 
     def convert_to_mono_audio(self, input_audio):
         output_audio = []
@@ -47,8 +48,9 @@ class AudioProcessing(object):
         reflection_delay = interval * self.sample_freq + 1
         output_audio = np.zeros(len(temp_data) + int(output_delay), dtype='float64')
         n_reflections = int(decay / interval)
-        #expotential_decrease = np.exp(np.linspace(np.e, 1, n_reflections + 2))[1:-1]
-        linear_decrease = np.linspace(0, 1, n_reflections + 1)[::-1]
+        # expotential_decrease = np.exp(np.linspace(np.e, 1, n_reflections + 2))[1:-1]
+        linear_decrease = np.linspace(0, 1, n_reflections + 2)[::-1]
+        linear_decrease = linear_decrease[1:-1]
 
         for i, sample in enumerate(temp_data):
             output_audio[i] += sample
@@ -57,26 +59,30 @@ class AudioProcessing(object):
 
         self.transformed_audio_data = output_audio.astype(np.int16)
 
-
-
     def add_flanger(self, frequency, amplitude, type):
         self.resetData()
         length = len(self.transformed_audio_data)
-        output_audio = np.zeros(length, dtype='int16')
-        n_samples = np.array(range(length))
-        # frequency /= Fs
+        y = np.zeros(length, dtype='int64')
+        x = self.original_audio_data
+        amplitude *= self.sample_freq
 
+        if type == "sine":
+            for i in range(length - int(2 * amplitude)):
+                y[i] = x[i] + x[int(i + amplitude + round(amplitude * np.sin(2 * np.pi * i * frequency/self.sample_freq)))]
+        else:
+            for i in range(length - int(2 * amplitude)):
+                y[i] = x[i] + x[int(i + amplitude + round(amplitude * signal.sawtooth(2 * np.pi * i * frequency / self.sample_freq, 0.5)))]
+        '''
         if type == "triangle":
-            flanger = 2 + signal.sawtooth(2 * np.pi * frequency * n_samples, 0.5)
+            flanger = 1 + signal.sawtooth(2 * np.pi * frequency * n_samples, 0.5)
 
         elif type == "sine":
-            flanger = 2 + np.sin(2 * np.pi * frequency * n_samples)
+            flanger = 1 + np.sin(2 * np.pi * frequency * n_samples)
 
         else:
             exit(1)
 
-        # plt.plot(flanger)
-        # plt.show()
+        print(flanger)
         index = np.around(n_samples - self.sample_freq * amplitude * flanger)
         index[index < 0] = 0
         index[index > (length - 1)] = length - 1
@@ -88,6 +94,8 @@ class AudioProcessing(object):
             output_audio[i] = np.float(temp_data[i]) + np.float(temp_data[int(index[i])])
 
         self.transformed_audio_data = output_audio.astype(np.int16)
+        '''
+        self.transformed_audio_data = y.astype(np.int16)
 
     def play(self):
         sd.play(self.transformed_audio_data, self.sample_freq)
