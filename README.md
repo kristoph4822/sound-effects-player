@@ -1,5 +1,5 @@
 # Sound Effect Player
-Simple audio files player with PyQT GUI. It allows to apply different sound effects over uploaded audio file. All effects written manually as array transformations (look: AudioProcessing.py)
+Simple audio files player with PyQT GUI. It allows to apply different sound effects over uploaded audio file. All effects written manually as array transformations (look: AudioProcessing.py).
 
 #### Available parameterized  sound effects:
 * Delay
